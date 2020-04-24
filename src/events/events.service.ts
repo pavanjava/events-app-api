@@ -1,4 +1,4 @@
-import {Injectable} from '@nestjs/common';
+import {HttpException, HttpStatus, Injectable} from '@nestjs/common';
 import {Repository} from "typeorm";
 import {InjectRepository} from "@nestjs/typeorm";
 
@@ -22,15 +22,27 @@ export class EventsService {
     }
 
     read = async (id: string) => {
-        return await this.eventRepository.findOneOrFail(id);
+        const event = await this.eventRepository.findOneOrFail(id);
+        if(!event){
+            throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
+        }
+        return event;
     }
 
     update = async (id: string, data: Partial<EventsDto>) => {
+        const event = await this.eventRepository.findOneOrFail(id);
+        if(!event){
+            throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
+        }
         await this.eventRepository.update({id}, data);
-        return this.eventRepository.findOneOrFail(id);
+        return event;
     }
 
     remove = async (id: string) => {
+        const event = await this.eventRepository.findOneOrFail(id);
+        if(!event){
+            throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
+        }
         await this.eventRepository.delete(id);
         return {deleted: true};
     }

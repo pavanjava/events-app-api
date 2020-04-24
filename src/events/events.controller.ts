@@ -1,6 +1,7 @@
-import {Body, Controller, Delete, Get, Param, Post, Put} from '@nestjs/common';
+import {Body, Controller, Delete, Get, Param, Post, Put, UsePipes} from '@nestjs/common';
 import {EventsService} from "./events.service";
 import {EventsDto} from "./events.dto";
+import {ValidationPipe} from "../util/Validation.pipe";
 
 @Controller('/api/v1/events')
 export class EventsController {
@@ -14,7 +15,7 @@ export class EventsController {
     }
 
     @Post()
-    createEvent(@Body() event: EventsDto) {
+    createEvent(@Body(new ValidationPipe()) event: EventsDto) {
         return this.eventService.create(event)
     }
 
@@ -24,7 +25,7 @@ export class EventsController {
     }
 
     @Put(':id')
-    updateEvent(@Param('id') id: string, @Body() event: EventsDto) {
+    updateEvent(@Param('id') id: string, @Body(new ValidationPipe()) event: EventsDto) {
         return this.eventService.update(id, event);
     }
 

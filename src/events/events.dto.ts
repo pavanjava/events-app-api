@@ -1,4 +1,9 @@
-export interface EventsDto {
-    event: string,
-    description: string
+import {IsString, } from 'class-validator';
+
+export class EventsDto {
+    @IsString()
+    event: string;
+
+    @IsString()
+    description: string;
 }
