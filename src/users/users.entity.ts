@@ -31,6 +31,9 @@ export class UsersEntity {
         if(showToken){
             responseObject.token = token;
         }
+        if(this.events){
+            responseObject.events = this.events;
+        }
         return responseObject;
     }
 }
