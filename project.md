@@ -5,8 +5,8 @@ A place to see and post events
 User Stories
 * Authenticate users
 * Users can CRUD events
-* Users can upvote/downvote events
-* Users can bookmark an event
+* Users can upvote/downvote events -- left for someone who branches this repo
+* Users can bookmark an event -- left for someone who branches this repo
 * Users can comment on an event
 * Events can be seen in realtime
 
