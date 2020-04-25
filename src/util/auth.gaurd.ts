@@ -12,7 +12,7 @@ export class AuthGuard implements CanActivate {
         if(!isAuthenticated){
             return false;
         }
-
+        request.user = isAuthenticated;
         return true;
     }
 

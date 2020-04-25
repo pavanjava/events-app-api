@@ -4,43 +4,51 @@ import {InjectRepository} from "@nestjs/typeorm";
 
 import {EventEntity} from "./event.entity";
 import {EventsDto} from "./events.dto";
+import {UsersEntity} from "../users/users.entity";
 
 @Injectable()
 export class EventsService {
 
-    constructor(@InjectRepository(EventEntity) private eventRepository: Repository<EventEntity>) {
+    constructor(@InjectRepository(EventEntity) private eventRepository: Repository<EventEntity>,
+                @InjectRepository(UsersEntity) private userRepository: Repository<UsersEntity>) {
+    }
+
+    private toResponseObject = (event: EventEntity) => {
+        return {...event, user: event.user.toResponseObject(false)}
     }
 
     showAll = async () => {
-        return await this.eventRepository.find();
+        const events = await this.eventRepository.find({relations: ['user']});
+        return events.map(event => this.toResponseObject(event));
     }
 
-    create = async (data: EventsDto) => {
-        const event = await this.eventRepository.create(data);
+    create = async (userId: string, data: EventsDto) => {
+        const user = await this.userRepository.findOne({where: {id: userId}})
+        const event = await this.eventRepository.create({...data, user: user});
         await this.eventRepository.save(event);
-        return event;
+        return this.toResponseObject(event);
     }
 
     read = async (id: string) => {
-        const event = await this.eventRepository.findOneOrFail(id);
-        if(!event){
+        const event = await this.eventRepository.findOneOrFail({where: {id}, relations: ['user']});
+        if (!event) {
             throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
         }
-        return event;
+        return this.toResponseObject(event);
     }
 
-    update = async (id: string, data: Partial<EventsDto>) => {
-        const event = await this.eventRepository.findOneOrFail(id);
-        if(!event){
+    update = async (userId: string, eventId: string, data: Partial<EventsDto>) => {
+        const event = await this.eventRepository.findOne({where:{id:eventId}, relations:['user']});
+        if (!event) {
             throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
         }
-        await this.eventRepository.update({id}, data);
-        return event;
+        await this.eventRepository.update({id:eventId}, data);
+        return this.toResponseObject(event);
     }
 
-    remove = async (id: string) => {
-        const event = await this.eventRepository.findOneOrFail(id);
-        if(!event){
+    remove = async (id: string, userId: string) => {
+        const event = await this.eventRepository.findOne({where:{id}, relations:['user']});
+        if (!event) {
             throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
         }
         await this.eventRepository.delete(id);

@@ -1,6 +1,7 @@
-import {BeforeInsert, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn} from 'typeorm';
+import {BeforeInsert, Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn} from 'typeorm';
 import * as bcrypt from 'bcryptjs';
 import * as jwt from "jsonwebtoken";
+import {EventEntity} from "../events/event.entity";
 
 @Entity('users')
 export class UsersEntity {
@@ -8,6 +9,7 @@ export class UsersEntity {
     @CreateDateColumn() created: Date;
     @Column({type:'text', unique: true}) username: string;
     @Column('text') password: string;
+    @OneToMany(type => EventEntity, event => event.user) events: EventEntity[];
 
     @BeforeInsert()
     hashPassword = async () => {
