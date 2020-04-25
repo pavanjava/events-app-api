@@ -1,15 +1,18 @@
 import {Module} from '@nestjs/common';
 import {TypeOrmModule} from '@nestjs/typeorm';
+import {APP_FILTER, APP_INTERCEPTOR} from "@nestjs/core";
+import {GraphQLModule} from '@nestjs/graphql';
 
 import {EventsModule} from './events/events.module';
-import {APP_FILTER, APP_INTERCEPTOR} from "@nestjs/core";
 import {HttpErrorFilter} from "./util/http-error.filter";
 import {LogginInterceptor} from "./util/loggin.interceptor";
-import { UsersModule } from './users/users.module';
-import { CommentsModule } from './comments/comments.module';
+import {UsersModule} from './users/users.module';
+import {CommentsModule} from './comments/comments.module';
 
 @Module({
-    imports: [TypeOrmModule.forRoot(), EventsModule, UsersModule, CommentsModule],
+    imports: [TypeOrmModule.forRoot(), GraphQLModule.forRoot({
+        typePaths: ['./**/*.graphql']
+    }), EventsModule, UsersModule, CommentsModule],
     controllers: [],
     providers: [
         {
