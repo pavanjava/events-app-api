@@ -7,3 +7,12 @@ export class EventsDto {
     @IsString()
     description: string;
 }
+
+export class EventResponseObject {
+    id? : string;
+    updated: Date;
+    created: Date;
+    event: string;
+    description: string;
+    user: string;
+}

@@ -1,0 +1,8 @@
+type Event {
+    id: ID!
+    updated: String!
+    created: String!
+    event: String!
+    description: String!
+    user: User!
+}

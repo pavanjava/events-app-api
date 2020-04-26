@@ -1,6 +1,9 @@
 type User {
-    id: String!
+    id: ID!
     username: String!
+    created: String!
+    events: [Event!]
+    comments: [Comment!]
 }
 
 type Query {

@@ -5,7 +5,7 @@ import {Repository} from "typeorm";
 import {CommentsEntity} from "./comments.entity";
 import {EventEntity} from "../events/event.entity";
 import {UsersEntity} from "../users/users.entity";
-import {CommentsDto} from "./comments.dto";
+import {CommentsDto, CommentsResponseObject} from "./comments.dto";
 
 @Injectable()
 export class CommentsService {
@@ -14,7 +14,7 @@ export class CommentsService {
                 @InjectRepository(UsersEntity) private usersRepository: Repository<UsersEntity>) {
     }
 
-    getByEvent = async (eventId: string) => {
+    getByEvent = async (eventId: string): Promise<CommentsResponseObject[]> => {
         const event: any = await this.eventRepository.findOne({
             where: {id: eventId},
             relations: ['comments', 'comments.user', 'comments.events']
@@ -26,17 +26,17 @@ export class CommentsService {
         return comments;
     }
 
-    getByUser = async (userId: string) => {
+    getByUser = async (userId: string): Promise<CommentsResponseObject[]> => {
         const comments = await this.commentsRepository.find({where: {userId: userId}, relations: ['user']});
         const userComments = comments.map(comment => {return {"id":comment.id, "created":comment.created, "comment":comment.comment, "userId": comment.user.id}})
         return userComments;
     }
 
-    show = async (id: string) => {
+    show = async (id: string): Promise<CommentsResponseObject> => {
         return this.commentsRepository.findOne({where: {id}, relations: ['user', 'events']});
     }
 
-    create = async (eventId: string, userId: string, comment: CommentsDto) => {
+    create = async (eventId: string, userId: string, comment: CommentsDto): Promise<CommentsResponseObject> => {
         const event = await this.eventRepository.findOne({where: {id: eventId}});
         const user = await this.usersRepository.findOne({where: {id: userId}});
         const comments = await this.commentsRepository.create({...comment, user: user, events: event});
