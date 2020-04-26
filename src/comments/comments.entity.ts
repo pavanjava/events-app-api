@@ -9,7 +9,7 @@ export class CommentsEntity {
     @CreateDateColumn() created: Date;
     @Column('text') comment: string;
 
-    @ManyToOne(type => UsersEntity)
+    @ManyToOne(type => UsersEntity, user => user.comments)
     @JoinTable()
     user: UsersEntity;
 

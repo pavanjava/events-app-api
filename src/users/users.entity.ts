@@ -2,6 +2,7 @@ import {BeforeInsert, Column, CreateDateColumn, Entity, OneToMany, PrimaryGenera
 import * as bcrypt from 'bcryptjs';
 import * as jwt from "jsonwebtoken";
 import {EventEntity} from "../events/event.entity";
+import {CommentsEntity} from "../comments/comments.entity";
 
 @Entity('users')
 export class UsersEntity {
@@ -10,6 +11,7 @@ export class UsersEntity {
     @Column({type:'text', unique: true}) username: string;
     @Column('text') password: string;
     @OneToMany(type => EventEntity, event => event.user) events: EventEntity[];
+    @OneToMany(type => CommentsEntity, comment => comment.user) comments: CommentsEntity[];
 
     @BeforeInsert()
     hashPassword = async () => {
@@ -33,6 +35,9 @@ export class UsersEntity {
         }
         if(this.events){
             responseObject.events = this.events;
+        }
+        if(this.comments){
+            responseObject.comments = this.comments;
         }
         return responseObject;
     }

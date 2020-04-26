@@ -1,4 +1,6 @@
 import {IsNotEmpty} from "class-validator";
+import {CommentsEntity} from "../comments/comments.entity";
+import {EventEntity} from "../events/event.entity";
 
 export class UsersDto {
     @IsNotEmpty()
@@ -13,4 +15,6 @@ export class UserResponseObject {
     username: string;
     created: Date;
     token?: string;
+    comments?: CommentsEntity[];
+    events?: EventEntity[];
 }

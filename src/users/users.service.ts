@@ -10,7 +10,7 @@ export class UsersService {
     constructor(@InjectRepository(UsersEntity) private userRepository: Repository<UsersEntity>) {}
 
     showAll = async (): Promise<UserResponseObject[]> => {
-        const users = await this.userRepository.find({relations:['events']});
+        const users = await this.userRepository.find({relations:['events', 'comments']});
         return users.map((user) => user.toResponseObject(false));
     }
 
