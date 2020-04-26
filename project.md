@@ -13,6 +13,6 @@ User Stories
 Stack
 * Database - PostgreSQL
 * REST API - NestJS
-* GraphQL API - NestJS
+* GraphQL API - NestJS -- open graphql playground at http://localhost:3000/graphql
 * Rest Frontend - React + Redux
 * GraphQL Frontend - React with Apollo Client
